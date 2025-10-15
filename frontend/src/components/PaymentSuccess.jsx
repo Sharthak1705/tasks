@@ -15,7 +15,7 @@ const PaymentSuccess = () => {
   };
   return (
     <div style={{ textAlign: 'center', padding: '50px' }}>
-      <h1>🎉 Payment Successful!</h1>
+      <h1>🎉Thank you </h1>
       <p>Your payment was processed successfully.</p>
 
       <button
