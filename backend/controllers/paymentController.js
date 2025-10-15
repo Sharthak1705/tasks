@@ -1,6 +1,6 @@
 const Stripe = require('stripe');
 const Payment = require('../models/payment');
-const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 exports.createCheckoutSession = async (req, res) => {
   const { email, product } = req.body;
