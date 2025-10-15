@@ -17,48 +17,38 @@ const Checkout = () => {
     }
   }, [cart, navigate]);
 
-  const handlePayment = async (e) => {
-    e.preventDefault();
-    setError('');
+const handlePayment = async (e) => {
+  e.preventDefault();
+  setError('');
 
-    if (!email) {
-      setError('Please enter your email');
-      return;
-    }
+  if (!email) {
+    setError('Please enter your email');
+    return;
+  }
 
-    setLoading(true);
-    
-    
-    const lineItems = cart.map(item => ({
-        title: item.title,
-        price: item.price,
-        quantity: item.quantity 
-    }));
-    
-    
-    const cartTotalProduct = {
-      title: 'Cart Total Purchase',
-      price: parseFloat(total)
-    };
+  setLoading(true);
 
-    try {
-       const response = await axios.post('http://localhost:5000/api/stripe/create-checkout-session', {
+  try {
+    const response = await axios.post(
+      'http://localhost:5000/api/stripe/create-checkout-session',
+      {
         email,
-        product: cartTotalProduct, 
-      });
-
-      window.location.href = response.data.url;
-    } catch (err) {
-      if (err.code === 'ERR_NETWORK') {
-          setError('Could not connect to the server. Please ensure the backend is running on port 5000.');
-      } else {
-          console.error('Error creating checkout session:', err);
-          setError(err.response?.data?.error || 'Failed to create checkout session. Please try again.');
+        products: cart,
       }
-    } finally {
-      setLoading(false);
+    );
+
+    window.location.href = response.data.url;
+  } catch (err) {
+    if (err.code === 'ERR_NETWORK') {
+      setError('Could not connect to the server. Please ensure the backend is running.');
+    } else {
+      console.error('Error creating checkout session:', err);
+      setError(err.response?.data?.error || 'Failed to create checkout session.');
     }
-  };
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="max-w-lg mx-auto p-6 shadow-lg rounded-lg mt-10">

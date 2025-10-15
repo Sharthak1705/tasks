@@ -7,6 +7,13 @@ const PaymentSchema = new mongoose.Schema({
     enum: ['pending', 'success', 'failed'],
     default: 'pending',  },
   sessionId: { type: String, required: true },
-});
+    products: [
+    {
+      title: String,
+      price: Number,
+      quantity: Number,
+    },
+  ],
+}, { timestamps: true });
 
 module.exports = mongoose.model('Payment', PaymentSchema);

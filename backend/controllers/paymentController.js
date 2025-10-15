@@ -3,25 +3,35 @@ const Payment = require('../models/payment');
 const stripe = Stripe('sk_test_51QvE5VQ8viKcy6z5bfSXoH8p9nryyyjKqqGW1Iz2qBjhr3ot7GZjcrvS5XFbKU1WKK8kU6TbgbwdikiffIiq2irQ00RMYTPbMO');
 
 exports.createCheckoutSession = async (req, res) => {
-  const { email, product } = req.body;
+  const { email, products } = req.body; 
+
   try {
+    const line_items = products.map(item => ({
+      price_data: {
+        currency: 'usd',
+        product_data: { name: item.title },
+        unit_amount: item.price * 100,
+      },
+      quantity: item.quantity,
+    }));
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
-      line_items: [{
-        price_data: {
-          currency: 'usd',
-          product_data: { name: product.title },
-          unit_amount: product.price * 100,
-        },
-        quantity: 1,
-      }],
+      line_items,
       mode: 'payment',
       customer_email: email,
       success_url: 'http://localhost:5173/success',
       cancel_url: 'http://localhost:5173/cancel',
     });
 
-    await new Payment({ email, status: 'success', sessionId: session.id }).save();
+
+    await new Payment({
+      email,
+      status: 'pending',
+      sessionId: session.id,
+      products,
+    }).save();
+
     res.json({ url: session.url });
   } catch (error) {
     console.error('Error creating checkout session:', error);
