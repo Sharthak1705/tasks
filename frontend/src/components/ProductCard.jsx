@@ -200,7 +200,7 @@ const ProductManager = () => {
         </div>
 
         <div className="w-full md:w-1/2 bg-white p-6 rounded-xl shadow-lg">
-          <h3 className="text-2xl font-bold mb-4 text-gray-800">Shopping Cart ({cartItems.length} Unique Items)</h3>
+          <h3 className="text-2xl font-bold mb-4 text-gray-800">Shopping Cart ({cartItems.length} items)</h3>
           {cartItems.length === 0 ? (
             <p className="text-gray-500 italic">Your cart is empty. Add some products!</p>
           ) : (
